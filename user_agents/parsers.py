@@ -291,6 +291,27 @@ class UserAgent(object):
     def is_baidu_applet(self):
         return 'baiduboxapp' in self.ua_string.lower()
 
+    @property
+    def device_type(self):
+        if self.is_alipay_applet:
+            return "支付宝小程序"
+        elif self.is_wechat_applet:
+            return "微信小程序"
+        elif self.is_baidu_applet:
+            return "百度小程序"
+        elif self.is_qq_applet:
+            return "QQ 小程序"
+        elif self.is_tablet:
+            return self.device.family + "平板电脑"
+        elif self.is_mobile and self.device.family == "iPhone":
+            return "iPhone 手机"
+        elif self.is_mobile and self.os.family == "Android":
+            return "Android 手机"
+        elif self.is_pc:
+            return "PC 电脑"
+        else:
+            return "未知设备"
+
 
 def parse(user_agent_string):
     return UserAgent(user_agent_string)
