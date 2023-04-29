@@ -1,8 +1,7 @@
 from collections import namedtuple
-
 from ua_parser import user_agent_parser
-from .compat import string_types
 
+from .compat import string_types
 
 MOBILE_DEVICE_FAMILIES = (
     'iPhone',
@@ -91,6 +90,7 @@ EMAIL_PROGRAM_FAMILIES = set((
     'kmail2',
     'YahooMobileMail'
 ))
+
 
 def verify_attribute(attribute):
     if isinstance(attribute, string_types) and attribute.isdigit():
@@ -246,12 +246,12 @@ class UserAgent(object):
     @property
     def is_pc(self):
         if self.device.family in MOBILE_DEVICE_FAMILIES or \
-           self.device.family in TABLET_DEVICE_FAMILIES or \
-           self.device.brand in TABLET_DEVICE_BRANDS:
+                self.device.family in TABLET_DEVICE_FAMILIES or \
+                self.device.brand in TABLET_DEVICE_BRANDS:
             return False
         # Returns True for "PC" devices (Windows, Mac and Linux)
         if 'Windows NT' in self.ua_string or self.os.family in PC_OS_FAMILIES or \
-           self.os.family == 'Windows' and self.os.version_string == 'ME':
+                self.os.family == 'Windows' and self.os.version_string == 'ME':
             return True
         # TODO: remove after https://github.com/tobie/ua-parser/issues/127 is closed
         if self.os.family == 'Mac OS X' and 'Silk' not in self.ua_string:
@@ -274,6 +274,22 @@ class UserAgent(object):
     @property
     def is_email_client(self):
         return self.browser.family in EMAIL_PROGRAM_FAMILIES
+
+    @property
+    def is_wechat_applet(self):
+        return 'micromessenger' in self.ua_string.lower()
+
+    @property
+    def is_alipay_applet(self):
+        return 'alipayclient' in self.ua_string.lower()
+
+    @property
+    def is_qq_applet(self):
+        return 'qq' in self.ua_string.lower()
+
+    @property
+    def is_baidu_applet(self):
+        return 'baiduboxapp' in self.ua_string.lower()
 
 
 def parse(user_agent_string):
